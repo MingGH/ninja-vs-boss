@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ninja vs Boss</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      height: 100%;
+      font-family: sans-serif;
+      background: #000;
+      user-select: none;
+      cursor: pointer;
+    }
+    canvas {
+      display: block;
+      width: 100vw;
+      height: 100vh;
+    }
+    .score {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: white;
+      font-size: 24px;
+      z-index: 10;
+      text-shadow: 1px 1px 4px black;
+    }
+  </style>
+</head>
+<body>
+<div class="score" id="score">🥷 0 vs 🧓 0</div>
+<canvas id="canvas"></canvas>
+
+<script>
+  const canvas = document.getElementById("canvas");
+  const ctx = canvas.getContext("2d");
+  canvas.width = innerWidth;
+  canvas.height = innerHeight;
+
+  const scoreDiv = document.getElementById("score");
+
+  let sunScore = 0;
+  let moonScore = 0;
+
+  const particles = [];
+
+  let dividerRatio = 0.5; // start at 50%
+  let targetRatio = 0.5;
+
+  function spawn(x, y, emoji, direction) {
+    for (let i = 0; i < 10; i++) {
+      particles.push({
+        x,
+        y,
+        vx: (Math.random() - 0.5) * 8 + direction * 4,
+        vy: (Math.random() - 0.5) * 8,
+        life: 100,
+        emoji
+      });
+    }
+  }
+
+  function drawParticles() {
+    for (let i = particles.length - 1; i >= 0; i--) {
+      const p = particles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vy += 0.2;
+      p.life--;
+      ctx.font = "24px serif";
+      ctx.globalAlpha = p.life / 100;
+      ctx.fillText(p.emoji, p.x, p.y);
+      ctx.globalAlpha = 1;
+
+      if (p.life <= 0) {
+        particles.splice(i, 1);
+      }
+    }
+  }
+
+  function drawBackground() {
+    // smooth transition to new targetRatio
+    dividerRatio += (targetRatio - dividerRatio) * 0.05;
+    const divider = canvas.width * dividerRatio;
+
+    const gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
+    gradient.addColorStop(0, "#1e1f3a");       // moon side
+    gradient.addColorStop(dividerRatio - 0.01, "#1e1f3a");
+    gradient.addColorStop(dividerRatio, "#333");             // soft center transition
+    gradient.addColorStop(dividerRatio + 0.01, "#fceabb");
+    gradient.addColorStop(1, "#ffcc33");       // sun side
+
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }
+
+  function render() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawBackground();
+    drawParticles();
+    requestAnimationFrame(render);
+  }
+
+  render();
+
+  canvas.addEventListener("click", e => {
+    const x = e.clientX;
+    const y = e.clientY;
+    const isLeft = x < canvas.width / 2;
+
+    if (isLeft) {
+      moonScore++;
+      spawn(x, y, "🥷", 1);
+    } else {
+      sunScore++;
+      spawn(x, y, "🧓", -1);
+    }
+
+    const total = sunScore + moonScore || 1;
+    targetRatio = moonScore / total;
+
+    scoreDiv.textContent = `🥷 ${moonScore} vs 🧓 ${sunScore}`;
+  });
+
+  window.addEventListener("resize", () => {
+    canvas.width = innerWidth;
+    canvas.height = innerHeight;
+  });
+</script>
+</body>
+</html>
