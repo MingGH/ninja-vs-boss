@@ -144,23 +144,66 @@
 
   render();
 
+  // 获取统计数据
+  async function fetchStats() {
+    try {
+      const response = await fetch('https://api.996.ninja/ninja-boss/stats');
+      const statsData = await response.json();
+
+      // 重置计数
+      bossScore = 0;
+      ninjaScore = 0;
+
+      // 解析数据
+      statsData.forEach(item => {
+        if (item.data.roleType === 'ninja') {
+          ninjaScore = item.data.total;
+        } else if (item.data.roleType === 'boss') {
+          bossScore = item.data.total;
+        }
+      });
+
+      // 更新显示
+      updateScoreDisplay();
+    } catch (error) {
+      console.error('获取统计数据失败:', error);
+    }
+  }
+
+  // 更新分数显示
+  function updateScoreDisplay() {
+    const total = bossScore + ninjaScore || 1;
+    targetRatio = ninjaScore / total;
+    scoreDiv.textContent = `🥷 ${ninjaScore} vs 🧓 ${bossScore}`;
+  }
+
+  // 页面加载后开始获取统计数据
+  window.addEventListener('load', () => {
+    // 立即获取一次数据
+    fetchStats();
+    // 每隔5秒获取一次数据
+    setInterval(fetchStats, 5000);
+  });
+
+  // 点击事件保持原来的功能（可以删除如果只需要从后端获取数据）
   canvas.addEventListener("click", e => {
     const x = e.clientX;
     const y = e.clientY;
     const isLeft = x < canvas.width / 2;
 
     if (isLeft) {
-      ninjaScore++;
+      // 增加忍者票数
+      fetch('https://api.996.ninja/ninja-boss/add/ninja', { method: 'GET' })
+        .then(() => fetchStats()) // 更新统计数据
+        .catch(error => console.error('增加忍者票数失败:', error));
       spawn(x, y, "🥷", 1);
     } else {
-      bossScore++;
+      // 增加Boss票数
+      fetch('https://api.996.ninja/ninja-boss/add/boss', { method: 'GET' })
+        .then(() => fetchStats()) // 更新统计数据
+        .catch(error => console.error('增加Boss票数失败:', error));
       spawn(x, y, "🧓", -1);
     }
-
-    const total = bossScore + ninjaScore || 1;
-    targetRatio = ninjaScore / total;
-
-    scoreDiv.textContent = `🥷 ${ninjaScore} vs 🧓 ${bossScore}`;
   });
 
   window.addEventListener("resize", () => {
