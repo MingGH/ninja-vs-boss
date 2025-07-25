@@ -20,9 +20,23 @@
       width: 100vw;
       height: 100vh;
     }
-    .score {
+    .title {
       position: absolute;
       top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: white;
+      font-size: 18px;
+      z-index: 10;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 5px 15px;
+      border-radius: 20px;
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .score {
+      position: absolute;
+      top: 50px;
       left: 50%;
       transform: translateX(-50%);
       color: white;
@@ -390,7 +404,7 @@
     // 立即获取一次数据
     fetchStats();
     // 每隔5秒获取一次数据
-    setInterval(fetchStats, 5000);
+    setInterval(fetchStats, 2000);
   });
 
   // 点击事件保持原来的功能（可以删除如果只需要从后端获取数据）
