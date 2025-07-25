@@ -117,6 +117,7 @@
   let ninjaScore = 0;
 
   const particles = [];
+  const backgroundElements = [];
 
   let dividerRatio = 0.5; // start at 50%
   let targetRatio = 0.5;
@@ -131,6 +132,16 @@
     <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 1408 1472"><path fill="currentColor" d="M704 768q-5 3-55.5 25T590 821q38 57 73 98q-9 20-26 93t-36.5 168t-20.5 99q-1-3-21-8t-42.5-18.5T487 1215q-16-54-27-162t-17-192.5t-13-93.5q-7 3-31.5 16T348 806q-30 11-82 30t-82 30.5t-66.5 27.5t-59 32.5T24 960q-24 64-24 512h1408q0-112-5.5-292T1384 960q-12-17-34.5-33.5t-59-32.5t-66.5-27.5t-82-30.5t-82-30q-26-10-50.5-23T978 767q-7 9-11.5 93.5t-14 192.5t-25.5 162q-7 24-29.5 37.5T855 1271t-21 8q-62-303-89-360q35-41 73-98q-8-6-58.5-28T704 768zm0-704q140 0 235 103q27-13 61-3q13 2 29 1t30.5-2.5t28.5 14t23 50.5q4 16 6.5 29.5t1.5 25.5t-1 20t-4.5 18t-5.5 14.5t-9 14t-9.5 11.5t-11 12t-10.5 11q-5 25-21.5 44t-28.5 19q-22 111-110 184.5T704 704t-204-73.5T390 446q-12 0-28.5-19T340 383q-1-1-10.5-11t-11-12t-9.5-11.5t-9-14t-5.5-14.5t-4.5-18t-1-20t1.5-25.5T297 227q9-35 23-50.5t28.5-14T379 165t29-1q34-10 61 3Q564 64 704 64zm-47 224q6 0 10.5 4.5T672 303v27q20-2 32-2t32 2v-27q0-6 4.5-10.5T751 288h145q-19-34-17-47q1-10 3.5-14t5.5-5t10-4.5t13-9.5q-81-96-207-96t-207 96q6 6 13 9.5t10 4.5t5.5 5t3.5 14q2 13-17 47h145zm-177 41q-10 5-45 18q-3 18-3 37q0 112 80 192t192 80t192-80t80-192q0-19-3-37q-35-13-45-18v104q0 6-4.5 10.5T913 448H751q-6 0-10.5-4.5T736 433v-63q-15-3-32-3t-32 3v63q0 6-4.5 10.5T657 448H495q-6 0-10.5-4.5T480 433V329zm396-9h-88q-8 0-14 6t-6 14v56q0 8 6 14t14 6h88q8 0 14-6t6-14v-56q0-8-6-14t-14-6zm-344 0q-8 0-14 6t-6 14v56q0 8 6 14t14 6h88q8 0 14-6t6-14v-56q0-8-6-14t-14-6h-88z"/></svg>
   `;
 
+  // 忍者镖 SVG
+  const shurikenSVG = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 512 512"><path fill="currentColor" d="M328.876 132.542c42.457 68.612 149.227-58.938 170.989-115.976c61.182 226.687-128.532 308.915-135.427 328.892c7.255 69.326 51.51 118.195 131.396 156.386c-99.151 29.826-238.608-6.45-316.8-121.723C143.066 327.1 30.801 430.328 13.78 496.201c-34.377-113.443 2.418-172.508 35.594-230.973c38.4-67.671 102.25-75.349 97.414-117.266c-6.702-58.084-73.653-117.459-132.202-134.62C131.638-32.989 279 51.94 328.876 132.541zM303.85 263.71c0-40.71-44.372-66.29-79.679-45.936s-35.306 71.518 0 91.872c35.307 20.355 79.68-5.227 79.68-45.936z"/></svg>
+  `;
+
+  // 钞票 SVG
+  const moneySVG = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 512 512"><path fill="currentColor" d="m210.6 44.39l-7-4.39c-13.7-8.4-30.8-13.28-45.5-8.7c-15.8 4.92-28.4 17.09-35 35.37l-9.4-4.84c-16.2-8.34-24.68-8.47-31.71-5.31c-5.61 2.51-11.46 8.55-18.09 17.37l82.4 63.71c12.9 4.2 31.8 4.1 50.7-.8c19-4.9 37.9-14.5 51.7-27.4l31.1-76.9c-27.4-21.65-52.4-9.11-69.2 11.89zm53.1 76.51c-17 17.2-42.3 28.8-62 34c-6.9 1.8-13.8 3.1-20.5 3.8c-3.7 6.1-6.8 12.3-9.2 18.5c4.8 24.4 13.8 44.4 27.3 60.8l-14.4 12c-8.3-10-15.7-20.8-21.3-32.8c-.9 23.2 4.3 47.2 12.8 72.2l-17.7 6c-15.6-45.6-20.9-92.3 1-136.3c-7.4-.6-14.4-2-20.9-4.3l-.3-.1c-4.3 4.1-8.4 8.4-12.3 12.9c-31.57 36.6-48.96 85.3-39.86 123.2c4.87 20.3 13.6 39.5 26.16 55.9c18.4-.4 35.8 0 51.6 6c7.5-.8 15.2-1.3 23.2-1.3c28.5 0 54.3 5.3 73.8 14.5c7.6 3.6 14.5 7.9 20 12.8c0-5.3.8-11 2.4-15.2c-8.9-8.4-14.5-18.6-14.5-30.2c0-16.1 10.7-29.4 26.2-39c0-4.6.9-9 2.5-13.2c-10.1-8.7-16.6-19.5-16.6-32.1c0-7.9 2.6-15.1 7-21.6c-4.4-6.4-7-13.6-7-21.5c0-3.9.6-7.5 1.7-11c-9.7-8.6-15.8-19.2-15.8-31.4c0-12.1 6-22.6 15.6-31.1c-5.9-4.6-12.2-8.5-18.9-11.5zm111.4 2.3c-26 0-49.5 5.5-65.6 13.6c-16.2 8.1-23.8 18.1-23.8 26.7c0 8.7 7.6 18.7 23.8 26.8c16.1 8.1 39.6 13.6 65.6 13.6c11.3 0 22-1.1 31.9-2.9v-17c13.9-2.1 25.4-5.9 32.8-10.8v17.6c12.5-3.6 24.5-16.9 24.8-27.3c0-8.6-7.6-18.6-23.8-26.7c-16.2-8.1-39.6-13.6-65.7-13.6zm96.5 67.7c-3.3 3.5-7.2 6.8-11.6 9.8l.2 29c12.6-7.5 18.5-16.2 18.5-23.8c0-4.8-2.3-10-7.1-15zm-171.8 15.4c.3 8.6 7.9 18.3 23.8 26.3c16.2 8.2 39.6 13.6 65.7 13.6c16.3 0 31.6-2.2 44.7-5.8l.7-27.2c-17.2 6-37.6 9.3-59.6 9.3c-28.5 0-54.4-5.7-74-15.5c-.5-.2-.9-.5-1.3-.7zm2 34.8c-1.4 2.7-2 5.4-2 7.9c0 8.7 7.6 18.7 23.8 26.8c16.2 8.1 39.6 13.5 65.7 13.5c13.2 0 25.7-1.3 37-3.8v-24c-11.6 2.2-24 3.3-37 3.3c-28.6 0-54.5-5.6-74.1-15.5c-4.9-2.4-9.4-5.2-13.4-8.2zm174.9 0c-6.1 4.3-11.4 7.5-17.6 10.2v22.3c13.3-7.7 19.6-16.7 19.6-24.6c0-2.5-.6-5.2-2-7.9zm7.5 36.8c-2 2-4.2 3.9-6.6 5.8v32.4c10.3-7 15.3-14.7 15.3-21.7c0-5.3-2.9-11-8.7-16.5zm-170.1 14c-.1.9-.2 1.7-.2 2.5c0 8.7 7.6 18.6 23.8 26.7c16.2 8.2 39.7 13.6 65.7 13.6c14.9 0 29.1-1.8 41.4-4.8V300c-16.3 5.2-35.2 8-55.5 8c-28.6 0-54.5-5.7-74.1-15.5c-.4-.2-.7-.4-1.1-.6zm-13.6 21.4c-8.7 6.5-12.8 13.6-12.8 20c0 8.7 7.6 18.6 23.8 26.8c16.2 8.1 39.6 13.5 65.7 13.5c9.5 0 18.7-.7 27.3-2v-18.2h-1.1c-28.6 0-54.5-5.7-74.1-15.6c-12.5-6.2-22.9-14.5-28.8-24.5zM463 343.9c-7.9 2.8-16.5 5.1-25.7 6.6v12.1c1.9-.8 3.8-1.6 5.6-2.5c9.8-5 16.4-10.6 20.1-16.2zm9.2 18.2c-3.8 3.8-8.2 7.2-13.1 10.3V401c13.3-7.6 19.6-16.6 19.6-24.5c0-4.6-2.1-9.6-6.5-14.4zm-348.7 2.8c-10.2.1-21.2 1.4-32.6 4.1c-22.81 5.3-42.42 15-55.22 25.7c-12.8 10.6-17.8 21.4-16.3 29.1c1.5 7.7 9.4 14.8 24.8 18.9c15.35 4 36.82 4.2 59.62-1.1c9.2-2.2 17.8-5 25.7-8.3v-20.7c14.6-6.5 25.5-14.3 30.4-21.9v24.4c12.1-10.4 16.8-20.8 15.4-28.4c-1.4-7.7-9.4-14.8-24.8-18.8c-7.7-2-16.9-3.1-27-3zm64.6 5.2c2.7 3.9 4.6 8.3 5.6 13.2c1.1 6 .6 11.8-1.2 17.5c9.9 2.6 18.9 6.1 26.7 10.5c4.4 2.4 8.5 5.3 12.1 8.3c9-2.1 16.6-5.1 22-8.7v20.6c16.1-7.6 23.5-16.9 23.5-24.3c0-7.5-7.4-16.8-23.6-24.4c-16.1-7.5-39.3-12.6-65.1-12.7zm111.8 5c-.1.4-.1.9-.1 1.4c0 8.7 7.6 18.6 23.8 26.8c16.2 8.1 39.6 13.5 65.7 13.5c13.2 0 25.7-1.4 37-3.8v-26.9c-14.8 4-31.5 6.2-49.1 6.2c-28.6 0-54.5-5.7-74.1-15.5c-1.1-.6-2.2-1.2-3.2-1.7zm2.8 37.3c-2 3.3-2.9 6.5-2.9 9.6c0 8.7 7.6 18.6 23.8 26.8c16.2 8.1 39.6 13.5 65.7 13.5c13.2 0 25.7-1.4 37-3.8v-26.4c-11.6 2.2-24 3.4-37 3.4c-28.6 0-54.5-5.7-74.1-15.6c-4.5-2.2-8.7-4.7-12.5-7.5zm173.1 0c-5.8 3.9-10.9 7-16.7 9.5v24.6c13.3-7.6 19.6-16.6 19.6-24.5c0-3.1-.9-6.3-2.9-9.6zm-292.6 5.4c-3.5 4.4-7.6 8.6-12.2 12.4c-15.6 13.1-37.6 23.7-63 29.6c-9.06 2.1-18.06 3.4-26.7 4.1c3.2 5.3 8.83 10.5 17.07 15.1c13.63 7.7 33.63 12.9 55.83 12.9c10.1 0 19.7-1.1 28.5-3v-20.8c13.8-2.1 25.4-5.9 32.8-10.8v18.4c10-7 14.8-14.9 14.8-22.4c0-8.7-6.5-18-20.2-25.7c-7.4-4.1-16.6-7.5-26.9-9.8z"/></svg>
+  `;
+
   // 将 SVG 转换为图像对象
   function svgToImage(svgString) {
     const img = new Image();
@@ -143,6 +154,41 @@
   // 创建图像对象
   const ninjaImg = svgToImage(ninjaSVG);
   const bossImg = svgToImage(bossSVG);
+  const shurikenImg = svgToImage(shurikenSVG);
+  const moneyImg = svgToImage(moneySVG);
+
+  // 初始化背景元素
+  function initBackgroundElements() {
+    // 创建忍者侧的飞镖
+    for (let i = 0; i < 15; i++) {
+      backgroundElements.push({
+        x: Math.random() * (canvas.width * 0.5),
+        y: Math.random() * canvas.height,
+        size: 15 + Math.random() * 15,
+        speedX: (Math.random() - 0.5) * 0.5,
+        speedY: (Math.random() - 0.5) * 0.5,
+        rotation: Math.random() * Math.PI * 2,
+        rotationSpeed: (Math.random() - 0.5) * 0.1,
+        type: 'shuriken',
+        opacity: 0.3 + Math.random() * 0.4
+      });
+    }
+
+    // 创建老板侧的钞票
+    for (let i = 0; i < 15; i++) {
+      backgroundElements.push({
+        x: canvas.width * 0.5 + Math.random() * (canvas.width * 0.5),
+        y: Math.random() * canvas.height,
+        size: 15 + Math.random() * 15,
+        speedX: (Math.random() - 0.5) * 0.5,
+        speedY: (Math.random() - 0.5) * 0.5,
+        rotation: Math.random() * Math.PI * 2,
+        rotationSpeed: (Math.random() - 0.5) * 0.1,
+        type: 'money',
+        opacity: 0.3 + Math.random() * 0.4
+      });
+    }
+  }
 
   function spawn(x, y, emoji, direction) {
     for (let i = 0; i < 10; i++) {
@@ -175,6 +221,79 @@
     }
   }
 
+  function updateBackgroundElements() {
+    // 计算哪边领先
+    const ninjaLeading = ninjaScore > bossScore;
+    const bossLeading = bossScore > ninjaScore;
+
+    for (let element of backgroundElements) {
+      // 根据哪边数量多，添加风向效果
+      if (ninjaLeading && element.type === 'shuriken') {
+        element.speedX += 0.02; // 忍者侧的飞镖向右飘
+      } else if (bossLeading && element.type === 'money') {
+        element.speedX -= 0.02; // 老板侧的钞票向左飘
+      }
+
+      // 更新位置
+      element.x += element.speedX;
+      element.y += element.speedY;
+      element.rotation += element.rotationSpeed;
+
+      // 添加轻微的重力效果
+      element.speedY += (Math.random() - 0.5) * 0.05;
+
+      // 限制速度
+      element.speedX = Math.max(-2, Math.min(2, element.speedX));
+      element.speedY = Math.max(-1, Math.min(1, element.speedY));
+
+      // 重置位置
+      if (element.x < -element.size) {
+        element.x = canvas.width + element.size;
+        element.y = Math.random() * canvas.height;
+      } else if (element.x > canvas.width + element.size) {
+        element.x = -element.size;
+        element.y = Math.random() * canvas.height;
+      }
+
+      if (element.y < -element.size) {
+        element.y = canvas.height + element.size;
+        element.x = Math.random() * canvas.width;
+      } else if (element.y > canvas.height + element.size) {
+        element.y = -element.size;
+        element.x = Math.random() * canvas.width;
+      }
+    }
+  }
+
+  function drawBackgroundElements() {
+    for (let element of backgroundElements) {
+      ctx.save();
+      ctx.globalAlpha = element.opacity;
+      ctx.translate(element.x, element.y);
+      ctx.rotate(element.rotation);
+
+      if (element.type === 'shuriken' && shurikenImg.complete) {
+        ctx.drawImage(
+          shurikenImg,
+          -element.size/2,
+          -element.size/2,
+          element.size,
+          element.size
+        );
+      } else if (element.type === 'money' && moneyImg.complete) {
+        ctx.drawImage(
+          moneyImg,
+          -element.size/2,
+          -element.size/2,
+          element.size,
+          element.size
+        );
+      }
+
+      ctx.restore();
+    }
+  }
+
   function drawBackground() {
     // smooth transition to new targetRatio
     dividerRatio += (targetRatio - dividerRatio) * 0.05;
@@ -189,6 +308,10 @@
 
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // 更新并绘制背景元素
+    updateBackgroundElements();
+    drawBackgroundElements();
 
     // 绘制背景角色
     if (ninjaImg.complete) {
@@ -261,6 +384,9 @@
 
   // 页面加载后开始获取统计数据
   window.addEventListener('load', () => {
+    // 初始化背景元素
+    initBackgroundElements();
+
     // 立即获取一次数据
     fetchStats();
     // 每隔5秒获取一次数据
