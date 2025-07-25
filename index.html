@@ -26,14 +26,81 @@
       left: 50%;
       transform: translateX(-50%);
       color: white;
-      font-size: 24px;
+      font-size: 28px;
       z-index: 10;
-      text-shadow: 1px 1px 4px black;
+      text-shadow:
+        0 0 10px #fff,
+        0 0 20px #fff,
+        0 0 30px #e60073,
+        0 0 40px #e60073;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 10px 20px;
+      border-radius: 30px;
+      backdrop-filter: blur(5px);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      box-shadow:
+        0 0 20px rgba(255, 0, 100, 0.5),
+        inset 0 0 10px rgba(255, 255, 255, 0.2);
+      animation: pulse 2s infinite;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .score span {
+      font-weight: bold;
+      font-size: 32px;
+      text-shadow:
+        0 0 5px #fff,
+        0 0 10px #fff,
+        0 0 15px #0073e6,
+        0 0 20px #0073e6;
+    }
+
+    .ninja-score {
+      color: #4fc3f7;
+    }
+
+    .boss-score {
+      color: #ffca28;
+    }
+
+    @keyframes pulse {
+      0% {
+        box-shadow:
+          0 0 20px rgba(255, 0, 100, 0.5),
+          inset 0 0 10px rgba(255, 255, 255, 0.2);
+      }
+      50% {
+        box-shadow:
+          0 0 30px rgba(255, 0, 100, 0.8),
+          inset 0 0 15px rgba(255, 255, 255, 0.4);
+      }
+      100% {
+        box-shadow:
+          0 0 20px rgba(255, 0, 100, 0.5),
+          inset 0 0 10px rgba(255, 255, 255, 0.2);
+      }
+    }
+
+    .vs {
+      color: #ff5252;
+      font-weight: bold;
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
     }
   </style>
 </head>
 <body>
-<div class="score" id="score">🥷 0 vs 🧓 0</div>
+<div class="score" id="score">
+  <span class="ninja-score">🥷 <span id="ninja-score">0</span></span>
+  <span class="vs">VS</span>
+  <span class="boss-score">🧓 <span id="boss-score">0</span></span>
+</div>
 <canvas id="canvas"></canvas>
 
 <script>
@@ -43,6 +110,8 @@
   canvas.height = innerHeight;
 
   const scoreDiv = document.getElementById("score");
+  const ninjaScoreSpan = document.getElementById("ninja-score");
+  const bossScoreSpan = document.getElementById("boss-score");
 
   let bossScore = 0;
   let ninjaScore = 0;
@@ -174,7 +243,20 @@
   function updateScoreDisplay() {
     const total = bossScore + ninjaScore || 1;
     targetRatio = ninjaScore / total;
-    scoreDiv.textContent = `🥷 ${ninjaScore} vs 🧓 ${bossScore}`;
+
+    // 分别更新分数显示
+    ninjaScoreSpan.textContent = ninjaScore;
+    bossScoreSpan.textContent = bossScore;
+
+    // 添加动画效果
+    scoreDiv.animate([
+      { transform: 'translateX(-50%) scale(1)' },
+      { transform: 'translateX(-50%) scale(1.1)' },
+      { transform: 'translateX(-50%) scale(1)' }
+    ], {
+      duration: 300,
+      iterations: 1
+    });
   }
 
   // 页面加载后开始获取统计数据
